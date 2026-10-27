@@ -1,0 +1,1173 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Visitor Management System</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+<style>
+:root {
+    --primary: #3878ff;
+    --primary-light: #60a5fa;
+    --purple: #7955ff;
+    --bg: #050b18;
+    --panel: rgba(12, 25, 48, 0.88);
+    --panel-light: rgba(20, 39, 69, 0.76);
+    --border: rgba(89, 148, 255, 0.25);
+    --text: #f4f7ff;
+    --muted: #91a4c4;
+    --green: #10d6a0;
+    --radius: 20px;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+
+body {
+    min-height: 100vh;
+    margin: 0;
+    padding: 28px;
+    box-sizing: border-box;
+    font-family: 'Inter', sans-serif;
+    color: #f4f7ff;
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(2, 8, 23, 0.58),
+            rgba(3, 12, 30, 0.76)
+        ),
+        url("visitor-background.png");
+
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+}
+
+.panel {
+    background: rgba(5, 17, 38, 0.76);
+    border: 1px solid rgba(59, 130, 246, 0.65);
+    border-radius: 20px;
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    box-shadow: 0 15px 45px rgba(0, 0, 0, 0.25);
+}
+
+
+button, input, select {
+    font: inherit;
+}
+
+button {
+    cursor: pointer;
+    transition: transform .2s ease, box-shadow .2s ease, background .2s ease;
+}
+
+button:hover {
+    transform: translateY(-2px);
+}
+
+button:focus-visible, input:focus-visible, select:focus-visible {
+    outline: 2px solid #60a5fa;
+    outline-offset: 3px;
+}
+
+.dashboard {
+    width: 100%;
+    max-width: 1500px;
+    margin: auto;
+}
+
+/* HEADER */
+
+.topbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+    margin-bottom: 28px;
+}
+
+.brand {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.brand-icon {
+    width: 58px;
+    height: 58px;
+    display: grid;
+    place-items: center;
+    border-radius: 18px;
+    background: linear-gradient(145deg, #3b82f6, #5145cd);
+    box-shadow: 0 0 35px rgba(59, 130, 246, .28);
+    font-size: 25px;
+}
+
+.brand h1 {
+    font-size: clamp(21px, 3vw, 30px);
+    letter-spacing: 1px;
+    font-weight: 800;
+}
+
+.brand p {
+    margin-top: 5px;
+    color: #9bb8ec;
+    font-size: 11px;
+    letter-spacing: 3px;
+}
+
+.header-right {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.header-pill {
+    padding: 13px 17px;
+    border: 1px solid var(--border);
+    background: rgba(13, 28, 51, .8);
+    border-radius: 14px;
+    color: #b9c9e4;
+    font-size: 12px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.header-pill i {
+    color: var(--primary-light);
+    font-size: 17px;
+}
+
+.header-pill strong {
+    display: block;
+    color: white;
+    font-size: 13px;
+    margin-bottom: 4px;
+}
+
+/* WELCOME */
+
+.welcome {
+    margin-bottom: 23px;
+}
+
+.welcome h2 {
+    font-size: clamp(23px, 3vw, 34px);
+    letter-spacing: -1px;
+    margin-bottom: 8px;
+}
+
+.welcome h2 span {
+    color: #75a7ff;
+}
+
+.welcome p {
+    color: var(--muted);
+    font-size: 14px;
+    line-height: 1.7;
+}
+
+/* CARDS */
+
+.panel {
+    min-width: 0;
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 24px;
+    box-shadow: 0 15px 45px rgba(0, 0, 0, .18);
+    backdrop-filter: blur(18px);
+}
+
+.section-heading {
+    display: flex;
+    align-items: center;
+    gap: 13px;
+    margin-bottom: 22px;
+}
+
+.heading-icon {
+    width: 44px;
+    height: 44px;
+    flex-shrink: 0;
+    display: grid;
+    place-items: center;
+    border-radius: 14px;
+    background: rgba(59, 130, 246, .16);
+    color: #8cb8ff;
+    font-size: 19px;
+}
+
+.section-heading h2 {
+    font-size: 20px;
+    font-weight: 700;
+}
+
+.section-heading p {
+    color: var(--muted);
+    font-size: 12px;
+    margin-top: 5px;
+}
+
+/* CHECK-IN LAYOUT */
+
+.checkin-layout {
+    display: grid;
+    grid-template-columns: minmax(260px, .82fr) minmax(0, 1.6fr);
+    gap: 22px;
+    align-items: stretch;
+}
+
+.camera-panel {
+    background: linear-gradient(155deg, rgba(24, 53, 94, .85), rgba(5, 15, 32, .95));
+}
+
+.camera-heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 16px;
+}
+
+.camera-heading h3 {
+    font-size: 16px;
+}
+
+.live-status {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    font-size: 11px;
+    color: #51e8b0;
+}
+
+.live-dot {
+    width: 8px;
+    height: 8px;
+    background: #10d6a0;
+    border-radius: 50%;
+    box-shadow: 0 0 12px #10d6a0;
+}
+
+.camera-frame {
+    position: relative;
+    overflow: hidden;
+    border-radius: 14px;
+    border: 1px solid rgba(93, 160, 255, .55);
+    background: #020713;
+}
+
+video {
+    display: block;
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+}
+
+.camera-caption {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 13px;
+    font-size: 11px;
+    color: white;
+    background: linear-gradient(transparent, rgba(0,0,0,.8));
+}
+
+.camera-actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-top: 14px;
+}
+
+.btn {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 9px;
+    min-height: 46px;
+    padding: 12px 14px;
+    border: 1px solid transparent;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 700;
+    color: white;
+}
+
+.btn-primary {
+    background: linear-gradient(110deg, #3887ff, #6650f6);
+    box-shadow: 0 6px 20px rgba(59, 130, 246, .2);
+}
+
+.btn-outline {
+    background: rgba(8, 20, 40, .7);
+    border-color: #376bb2;
+}
+
+.btn-upload {
+    width: 100%;
+    margin-top: 10px;
+    background: rgba(38, 63, 100, .6);
+    border-color: var(--border);
+}
+
+.photo-preview {
+    display: flex;
+    align-items: center;
+    gap: 13px;
+    flex-wrap: wrap;
+    margin-top: 16px;
+}
+
+img.preview {
+    width: 82px;
+    height: 82px;
+    object-fit: cover;
+    border-radius: 12px;
+    border: 1px solid #538cff;
+}
+
+.preview-message {
+    color: var(--muted);
+    font-size: 11px;
+    line-height: 1.7;
+}
+
+/* FORM */
+
+.form-panel {
+    background: linear-gradient(145deg, rgba(12, 26, 49, .95), rgba(5, 16, 34, .92));
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 19px 20px;
+}
+
+.field {
+    min-width: 0;
+}
+
+.field label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 9px;
+    color: #dce7fa;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.field label i {
+    width: 15px;
+    color: #73a9ff;
+}
+
+.field input,
+.field select,
+.filter-date {
+    width: 100%;
+    min-width: 0;
+    height: 47px;
+    padding: 0 13px;
+    color: white;
+    background: rgba(3, 12, 27, .75);
+    border: 1px solid #284c7b;
+    border-radius: 10px;
+    font-size: 12px;
+    transition: border-color .2s, box-shadow .2s;
+}
+
+.field input::placeholder {
+    color: #647b9d;
+}
+
+.field input:focus,
+.field select:focus,
+.filter-date:focus {
+    border-color: #5594ff;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, .13);
+    outline: none;
+}
+
+.field select {
+    cursor: pointer;
+}
+
+.field select option {
+    background: #0c1930;
+    color: white;
+}
+
+.field select:disabled {
+    opacity: .48;
+    cursor: not-allowed;
+}
+
+.checkin-btn {
+    width: 100%;
+    min-height: 52px;
+    margin-top: 23px;
+    border: none;
+    border-radius: 12px;
+    background: linear-gradient(105deg, #3286ff, #6650f8);
+    color: white;
+    font-size: 14px;
+    font-weight: 800;
+    box-shadow: 0 8px 25px rgba(59, 130, 246, .2);
+}
+
+.checkin-btn i {
+    margin-right: 8px;
+}
+
+.timestamp {
+    text-align: center;
+    margin-top: 18px;
+    color: #90a7ca;
+    font-size: 11px;
+}
+
+/* VISITOR LOG */
+
+.visitor-panel {
+    margin-top: 24px;
+}
+
+.log-toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.log-toolbar .section-heading {
+    margin: 0;
+}
+
+.log-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.date-field {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 5px 10px;
+    border: 1px solid #284c7b;
+    background: rgba(3, 12, 27, .7);
+    border-radius: 11px;
+}
+
+.date-field i {
+    color: #8db8ff;
+}
+
+.filter-date {
+    width: 155px;
+    height: 37px;
+    padding: 0 5px;
+    border: none;
+    background: transparent;
+}
+
+.download-btn {
+    min-height: 46px;
+    white-space: nowrap;
+    border: 1px solid rgba(16, 214, 160, .45);
+    background: linear-gradient(110deg, #078c76, #08ae8a);
+    color: white;
+    border-radius: 11px;
+    padding: 12px 16px;
+    font-size: 11px;
+    font-weight: 700;
+}
+
+.download-btn i {
+    margin-right: 7px;
+}
+
+.table-wrap {
+    overflow-x: auto;
+    border: 1px solid #23436d;
+    border-radius: 13px;
+}
+
+table {
+    width: 100%;
+    min-width: 1000px;
+    border-collapse: collapse;
+    text-align: left;
+}
+
+th {
+    padding: 16px 13px;
+    background: rgba(25, 47, 79, .95);
+    color: #b7c9e5;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .7px;
+    white-space: nowrap;
+}
+
+td {
+    padding: 12px 13px;
+    border-top: 1px solid rgba(48, 76, 115, .42);
+    color: #d9e5f7;
+    font-size: 11px;
+    white-space: nowrap;
+}
+
+tbody tr {
+    background: rgba(6, 17, 34, .45);
+    transition: background .2s;
+}
+
+tbody tr:hover {
+    background: rgba(38, 77, 131, .23);
+}
+
+td img {
+    width: 42px;
+    height: 42px;
+    object-fit: cover;
+    border-radius: 10px;
+    border: 1px solid #385c8e;
+}
+
+.checkout-btn {
+    padding: 9px 12px;
+    min-width: 98px;
+    border-radius: 9px;
+    background: linear-gradient(110deg, #078f70, #10b981);
+    border: 1px solid rgba(16, 214, 160, .3);
+    color: white;
+    font-size: 10px;
+    font-weight: 700;
+}
+
+.checkout-btn:disabled {
+    cursor: default;
+    transform: none;
+    background: #243a58;
+    border-color: #355477;
+    color: #a9bed9;
+    opacity: .85;
+}
+
+.empty-note {
+    padding: 30px;
+    text-align: center;
+    color: var(--muted);
+}
+
+.footer {
+    display: flex;
+    justify-content: space-between;
+    gap: 15px;
+    padding: 24px 5px 5px;
+    color: #7185a7;
+    font-size: 11px;
+}
+
+.footer span:last-child {
+    color: #8ba9d5;
+}
+
+/* RESPONSIVE */
+
+@media (max-width: 1000px) {
+    body {
+        padding: 20px;
+    }
+
+    .checkin-layout {
+        grid-template-columns: minmax(220px, .75fr) minmax(0, 1.3fr);
+        gap: 15px;
+    }
+
+    .panel {
+        padding: 18px;
+    }
+
+    .log-toolbar {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .log-actions {
+        width: 100%;
+        flex-wrap: wrap;
+    }
+}
+
+@media (max-width: 700px) {
+    body {
+        padding: 13px;
+    }
+
+    .topbar {
+        align-items: flex-start;
+    }
+
+    .brand {
+        gap: 10px;
+    }
+
+    .brand-icon {
+        width: 46px;
+        height: 46px;
+        border-radius: 13px;
+        font-size: 20px;
+    }
+
+    .brand p {
+        font-size: 9px;
+        letter-spacing: 1.5px;
+    }
+
+    .header-right {
+        display: none;
+    }
+
+    .welcome {
+        margin-bottom: 17px;
+    }
+
+    .checkin-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .form-grid {
+        gap: 16px 12px;
+    }
+
+    .panel {
+        padding: 16px;
+        border-radius: 16px;
+    }
+
+    .section-heading h2 {
+        font-size: 17px;
+    }
+
+    .log-actions {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    .date-field {
+        width: 100%;
+    }
+
+    .filter-date {
+        flex: 1;
+        width: 100%;
+    }
+
+    .download-btn {
+        width: 100%;
+    }
+
+    .footer {
+        flex-direction: column;
+        text-align: center;
+    }
+}
+
+@media (max-width: 420px) {
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .camera-actions {
+        grid-template-columns: 1fr;
+    }
+
+    .welcome h2 {
+        font-size: 24px;
+    }
+
+    .field input,
+    .field select {
+        height: 45px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        scroll-behavior: auto !important;
+        transition: none !important;
+        animation: none !important;
+    }
+}
+</style>
+</head>
+
+<body>
+<div class="dashboard">
+
+    <!-- HEADER -->
+    <header class="topbar">
+        <div class="brand">
+            <div class="brand-icon">
+                <i class="fa-solid fa-building-shield"></i>
+            </div>
+            <div>
+                <h1>VISITOR</h1>
+                <p>MANAGEMENT SYSTEM</p>
+            </div>
+        </div>
+
+        <div class="header-right">
+            <div class="header-pill">
+                <i class="fa-regular fa-clock"></i>
+                <div>
+                    <strong>System Time</strong>
+                    <span id="headerClock">Loading...</span>
+                </div>
+            </div>
+            <div class="header-pill">
+                <i class="fa-solid fa-shield-halved"></i>
+                <div>
+                    <strong>Safe · Secure · Smart</strong>
+                    <span>Visitor registration portal</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <section class="welcome">
+        <h2>Welcome to <span>Visitor Central.</span></h2>
+        <p>Manage your visitor experience with ease. Register, check in, and keep track of every visit from one place.</p>
+    </section>
+
+    <!-- CHECK-IN AREA -->
+    <main class="checkin-layout">
+
+        <!-- CAMERA -->
+        <section class="panel camera-panel">
+            <div class="camera-heading">
+                <h3><i class="fa-solid fa-camera"></i> &nbsp;Visitor Photo</h3>
+                <span class="live-status">
+                    <span class="live-dot"></span> Live
+                </span>
+            </div>
+
+            <div class="camera-frame">
+                <video id="camera" autoplay playsinline></video>
+                <div class="camera-caption">
+                    <i class="fa-solid fa-crosshairs"></i>
+                    &nbsp; Position the visitor in the frame
+                </div>
+            </div>
+
+            <div class="camera-actions">
+                <button type="button" class="btn btn-primary" onclick="capturePhoto()">
+                    <i class="fa-solid fa-camera"></i> Capture Photo
+                </button>
+
+                <button type="button" class="btn btn-outline" onclick="switchCamera()">
+                    <i class="fa-solid fa-rotate"></i> Switch Camera
+                </button>
+            </div>
+
+            <button type="button" class="btn btn-upload"
+                onclick="document.getElementById('photoInput').click()">
+                <i class="fa-solid fa-folder-open"></i> Upload Photo
+            </button>
+
+            <input type="file" id="photoInput" accept="image/*" hidden>
+
+            <div class="photo-preview" id="previewContainer"></div>
+        </section>
+
+        <!-- VISITOR FORM -->
+        <section class="panel form-panel">
+            <div class="section-heading">
+                <div class="heading-icon">
+                    <i class="fa-solid fa-user-plus"></i>
+                </div>
+                <div>
+                    <h2>Visitor Check-In</h2>
+                    <p>Please enter the visitor's details below.</p>
+                </div>
+            </div>
+
+            <form id="visitorForm">
+                <div class="form-grid">
+
+                    <div class="field">
+                        <label for="visitorName">
+                            <i class="fa-regular fa-user"></i> Full Name *
+                        </label>
+                        <input type="text" id="visitorName"
+                            placeholder="Enter visitor name" autocomplete="name" required>
+                    </div>
+
+                    <div class="field">
+                        <label for="visitorPhone">
+                            <i class="fa-solid fa-phone"></i> Phone Number *
+                        </label>
+                        <input type="tel" id="visitorPhone"
+                            placeholder="Enter phone number" autocomplete="tel" required>
+                    </div>
+
+                    <div class="field">
+                        <label for="visitorEmail">
+                            <i class="fa-regular fa-envelope"></i> Email Address *
+                        </label>
+                        <input type="email" id="visitorEmail"
+                            placeholder="Enter email address" autocomplete="email" required>
+                    </div>
+
+                    <div class="field">
+                        <label for="deptDropdown">
+                            <i class="fa-solid fa-building"></i> Department *
+                        </label>
+                        <select id="deptDropdown" required>
+                            <option value="">Select department</option>
+                            <option value="IT">IT</option>
+                            <option value="HR">HR</option>
+                            <option value="Finance">Finance</option>
+                            <option value="Bisinusses">Bisinusses</option>
+                            <option value="Graphics">Graphics</option>
+                            <option value="Administrator">Administrator</option>
+                            <option value="Reciptionist">Reciptionist</option>
+                            <option value="Electrical">Electrical</option>
+                        </select>
+                    </div>
+
+                    <div class="field">
+                        <label for="Dropdown">
+                            <i class="fa-solid fa-venus-mars"></i> Gender *
+                        </label>
+                        <select id="Dropdown" required>
+                            <option value="">Select gender</option>
+                            <option value="Male">Male</option>
+                            <option value="Female">Female</option>
+                            <option value="Transgender">Transgender</option>
+                            <option value="Bisexual">Bisexual</option>
+                            <option value="Prefer Not To Say">Prefer Not To Say</option>
+                        </select>
+                    </div>
+
+                    <div class="field">
+                        <label for="staffDropdown">
+                            <i class="fa-solid fa-user-tie"></i> Person to Meet *
+                        </label>
+                        <select id="staffDropdown" disabled required>
+                            <option value="">Select department first</option>
+                        </select>
+                    </div>
+
+                </div>
+
+                <button type="submit" class="checkin-btn">
+                    <i class="fa-solid fa-paper-plane"></i> Confirm Check-In
+                </button>
+
+                <div class="timestamp" id="time"></div>
+            </form>
+        </section>
+
+    </main>
+
+    <!-- VISITOR LOG -->
+    <section class="panel visitor-panel">
+
+        <div class="log-toolbar">
+            <div class="section-heading">
+                <div class="heading-icon">
+                    <i class="fa-solid fa-clipboard-list"></i>
+                </div>
+                <div>
+                    <h2>Visitor Log</h2>
+                    <p>View and manage all visitor records.</p>
+                </div>
+            </div>
+
+            <div class="log-actions">
+                <div class="date-field">
+                    <i class="fa-regular fa-calendar"></i>
+                    <input type="date" id="filterDate" class="filter-date"
+                        aria-label="Filter visitor log export by check-in date">
+                </div>
+
+                <button type="button" onclick="downloadExcel()" class="download-btn">
+                    <i class="fa-solid fa-download"></i>
+                    Download Selected Date (CSV)
+                </button>
+            </div>
+        </div>
+
+        <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Photo</th>
+                        <th>Name</th>
+                        <th>Phone</th>
+                        <th>Email</th>
+                        <th>Department</th>
+                        <th>Person</th>
+                        <th>Check-In</th>
+                        <th>Check-Out</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody id="visitorTable"></tbody>
+            </table>
+        </div>
+
+        <div class="footer">
+            <span><i class="fa-solid fa-lock"></i> Visitor Management System</span>
+            <span>Making your workplace safer, one visit at a time.</span>
+        </div>
+    </section>
+
+</div>
+
+<script>
+let currentStream;
+let useFrontCamera = true;
+let photoData = "";
+
+const camera = document.getElementById("camera");
+const previewContainer = document.getElementById("previewContainer");
+const photoInput = document.getElementById("photoInput");
+
+// CAMERA START
+async function startCamera() {
+    if (currentStream) {
+        currentStream.getTracks().forEach(track => track.stop());
+    }
+
+    const constraints = {
+        video: {
+            facingMode: useFrontCamera ? "user" : "environment"
+        }
+    };
+
+    try {
+        currentStream = await navigator.mediaDevices.getUserMedia(constraints);
+        camera.srcObject = currentStream;
+    } catch (err) {
+        console.log("Camera error:", err);
+    }
+}
+
+// SWITCH CAMERA
+function switchCamera() {
+    useFrontCamera = !useFrontCamera;
+    startCamera();
+}
+
+// CAPTURE PHOTO
+function capturePhoto() {
+    const canvas = document.createElement("canvas");
+    canvas.width = camera.videoWidth;
+    canvas.height = camera.videoHeight;
+
+    const ctx = canvas.getContext("2d");
+    ctx.drawImage(camera, 0, 0);
+
+    photoData = canvas.toDataURL("image/png");
+    previewContainer.innerHTML = `<img src="${photoData}" class="preview">`;
+}
+
+// FILE UPLOAD
+photoInput.addEventListener("change", () => {
+    const file = photoInput.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = (e) => {
+        photoData = e.target.result;
+        previewContainer.innerHTML = `<img src="${photoData}" class="preview">`;
+    };
+    reader.readAsDataURL(file);
+});
+
+// INIT CAMERA
+startCamera();
+
+// ==== REST SAME ====
+
+const visitorForm = document.getElementById("visitorForm");
+const visitorName = document.getElementById("visitorName");
+const visitorPhone = document.getElementById("visitorPhone");
+const visitorEmail = document.getElementById("visitorEmail");
+const deptDropdown = document.getElementById("deptDropdown");
+const staffDropdown = document.getElementById("staffDropdown");
+const visitorTable = document.getElementById("visitorTable");
+const timeDisplay = document.getElementById("time");
+
+const staffDirectory = {
+    IT: ["Rahul", "Sneha"],
+    HR: ["Nidin", "Nivediya"],
+    Finance: ["George", "Lakshmi"],
+    Bisinusses: ["Navya","Arun"],
+    Graphics: ["Anoop","Albin"],
+    Administrator: ["Priya","Aamina"],
+    Reciptionist: ["Nanditha"],
+    Electrical: ["Hashir","Alan","Vinayak","Ajin"]
+};
+
+deptDropdown.addEventListener("change", () => {
+    const dept = deptDropdown.value;
+    staffDropdown.innerHTML = "";
+
+    if (dept) {
+        staffDropdown.disabled = false;
+        staffDirectory[dept].forEach(name => {
+            let opt = document.createElement("option");
+            opt.value = name;
+            opt.textContent = name;
+            staffDropdown.appendChild(opt);
+        });
+    } else {
+        staffDropdown.disabled = true;
+    }
+});
+
+setInterval(() => {
+    timeDisplay.innerText = "System Time: " + new Date().toLocaleString();
+}, 1000);
+
+visitorForm.addEventListener("submit", (e) => {
+    e.preventDefault();
+
+    const visitor = {
+        id: Date.now(),
+        name: visitorName.value,
+        phone: visitorPhone.value,
+        email: visitorEmail.value,
+        dept: deptDropdown.value,
+        staff: staffDropdown.value,
+        photo: photoData,
+        checkin: new Date().toISOString(),
+        checkout: null
+    };
+
+    let data = JSON.parse(localStorage.getItem("visitors")) || [];
+    data.push(visitor);
+    localStorage.setItem("visitors", JSON.stringify(data));
+
+    loadVisitors();
+    alert("✅ Checked In");
+
+    visitorForm.reset();
+    previewContainer.innerHTML = "";
+});
+
+function checkoutVisitor(id) {
+    let data = JSON.parse(localStorage.getItem("visitors")) || [];
+    data.forEach(v => {
+        if (v.id === id && !v.checkout) {
+            v.checkout = new Date().toISOString();
+        }
+    });
+    localStorage.setItem("visitors", JSON.stringify(data));
+    loadVisitors();
+}
+
+function loadVisitors() {
+    const data = JSON.parse(localStorage.getItem("visitors")) || [];
+    visitorTable.innerHTML = "";
+
+    data.forEach(v => {
+        const row = document.createElement("tr");
+
+        row.innerHTML = `
+            <td>${v.photo ? `<img src="${v.photo}" width="50">` : "-"}</td>
+            <td>${v.name}</td>
+            <td>${v.phone}</td>
+            <td>${v.email}</td>
+            <td>${v.dept}</td>
+            <td>${v.staff}</td>
+            <td>${new Date(v.checkin).toLocaleString()}</td>
+            <td>${v.checkout ? new Date(v.checkout).toLocaleString() : "—"}</td>
+            <td>
+                <button class="checkout-btn"
+                    onclick="checkoutVisitor(${v.id})"
+                    ${v.checkout ? "disabled" : ""}>
+                    ${v.checkout ? "Done" : "Check Out"}
+                </button>
+            </td>
+        `;
+
+        visitorTable.appendChild(row);
+    });
+}
+
+function downloadExcel() {
+    const data = JSON.parse(localStorage.getItem("visitors")) || [];
+    const selectedDate = document.getElementById("filterDate").value;
+
+    if (!selectedDate) {
+        alert("Please select a date");
+        return;
+    }
+
+    const start = new Date(selectedDate);
+    const end = new Date(selectedDate + "T23:59:59");
+
+    const filtered = data.filter(v => {
+        const checkin = new Date(v.checkin);
+        return checkin >= start && checkin <= end;
+    });
+
+    let csv = "Name,Phone,Email,Department,Person,CheckIn,CheckOut\n";
+
+    filtered.forEach(v => {
+        csv += `"${v.name}","${v.phone}","${v.email}","${v.dept}","${v.staff}","${new Date(v.checkin).toLocaleString()}","${v.checkout ? new Date(v.checkout).toLocaleString() : ""}"\n`;
+    });
+
+    const blob = new Blob([csv], { type: "text/csv" });
+    const url = URL.createObjectURL(blob);
+
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "Visitor_Log_Selected_Date.csv";
+    a.click();
+
+    URL.revokeObjectURL(url);
+}
+
+loadVisitors();
+
+/* Decorative header clock; does not change your existing functions. */
+setInterval(() => {
+    const clock = document.getElementById("headerClock");
+    if (clock) {
+        clock.textContent = new Date().toLocaleTimeString([], {
+            hour: "2-digit",
+            minute: "2-digit",
+            second: "2-digit"
+        });
+    }
+}, 1000);
+</script>
+</body>
+</html>
